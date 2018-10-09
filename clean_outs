@@ -1,0 +1,6 @@
+#/bin/bash
+#
+exec="lake.out"
+rm -f ./machinefile*
+rm -f ./$exec.out*
+rm -f ./$exec.rep*

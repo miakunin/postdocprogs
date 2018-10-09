@@ -1,0 +1,34 @@
+#!/bin/sh
+
+#set -x
+
+#Making specific directory for current experiment output
+if [ -n "$1" ]; then
+  mkdir results/$1;
+fi
+
+#Running the model
+./lake.out
+
+if [ -n "$1" ]; then
+  basename=${1%_*};
+  #Copying model results from working dir to specific dir
+  cp -r results/$basename/* results/$1;
+  #Copying model configuration files to specific dir
+  suffix=_setup.dat
+  setupfile=$basename$suffix
+  suffix=_driver.dat
+  driverfile=$basename$suffix
+  cp setup/$setupfile results/$1;
+  cp setup/$driverfile results/$1;
+  #copying aux files on max T diagnostics
+  if [ -e "maxT.dat" ]; then
+    cp maxT.dat results/$1;
+  fi
+  if [ -e "maxTav.dat" ]; then
+    cp maxTav.dat results/$1;
+  fi
+  #Setting path to specific dir for postprocessing scripts
+  echo $1 >> tools/currentdir
+fi
+
